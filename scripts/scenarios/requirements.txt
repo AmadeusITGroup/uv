@@ -2,7 +2,7 @@
 #    uv pip compile scripts/scenarios/requirements.in -o scripts/scenarios/requirements.txt --refresh-package packse -n
 chevron-blue==0.2.1
     # via
-    #   -r scripts/scenarios/requirements.in
+    #   -r requirements.in
     #   packse
 hatchling==1.24.2
     # via packse
@@ -11,14 +11,12 @@ msgspec==0.18.6
 packaging==24.0
     # via hatchling
 packse==0.3.39
-    # via -r scripts/scenarios/requirements.in
+    # via -r requirements.in
 pathspec==0.12.1
     # via hatchling
 pluggy==1.5.0
     # via hatchling
 pyyaml==6.0.1
-    # via packse
-setuptools==69.5.1
     # via packse
 trove-classifiers==2024.4.10
     # via hatchling
