@@ -336,7 +336,7 @@ pub async fn persist_with_retry(
             Ok(_) => Ok(()),
             Err(err) => Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
-                format!("{err:?}"),
+                err.to_string(),
             )),
         }
     } else {
@@ -401,7 +401,7 @@ pub fn persist_with_retry_sync(
             Ok(_) => Ok(()),
             Err(err) => Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
-                format!("{err:?}"),
+                err.to_string(),
             )),
         }
     } else {
