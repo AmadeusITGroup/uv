@@ -166,6 +166,7 @@ pub async fn write_atomic(path: impl AsRef<Path>, data: impl AsRef<[u8]>) -> std
     )?;
     fs_err::tokio::write(&temp_file, &data).await?;
     temp_file.persist(&path).map_err(|err| {
+        println!("Error in write atomic sync");
         std::io::Error::new(
             std::io::ErrorKind::Other,
             format!(
@@ -187,6 +188,7 @@ pub fn write_atomic_sync(path: impl AsRef<Path>, data: impl AsRef<[u8]>) -> std:
     )?;
     fs_err::write(&temp_file, &data)?;
     temp_file.persist(&path).map_err(|err| {
+        println!("Error in write atomic sync");
         std::io::Error::new(
             std::io::ErrorKind::Other,
             format!(
@@ -204,6 +206,7 @@ pub fn copy_atomic_sync(from: impl AsRef<Path>, to: impl AsRef<Path>) -> std::io
     let temp_file = tempfile_in(to.as_ref().parent().expect("Write path must have a parent"))?;
     fs_err::copy(from.as_ref(), &temp_file)?;
     temp_file.persist(&to).map_err(|err| {
+        println!("Error in copy atomic sync");
         std::io::Error::new(
             std::io::ErrorKind::Other,
             format!(
