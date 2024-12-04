@@ -189,7 +189,7 @@ pub fn copy_atomic_sync(from: impl AsRef<Path>, to: impl AsRef<Path>) -> std::io
 fn backoff_file_move() -> backoff::ExponentialBackoff {
     backoff::ExponentialBackoffBuilder::default()
         .with_initial_interval(std::time::Duration::from_millis(10))
-        .with_max_elapsed_time(Some(std::time::Duration::from_secs(60)))
+        .with_max_elapsed_time(Some(std::time::Duration::from_secs(600)))
         .build()
 }
 
