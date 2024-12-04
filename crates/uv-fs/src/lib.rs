@@ -189,7 +189,7 @@ pub fn copy_atomic_sync(from: impl AsRef<Path>, to: impl AsRef<Path>) -> std::io
 fn backoff_file_move() -> backoff::ExponentialBackoff {
     backoff::ExponentialBackoffBuilder::default()
         .with_initial_interval(std::time::Duration::from_millis(10))
-        .with_max_elapsed_time(Some(std::time::Duration::from_secs(10)))
+        .with_max_elapsed_time(Some(std::time::Duration::from_secs(60)))
         .build()
 }
 
@@ -295,7 +295,8 @@ pub async fn persist_with_retry(
 
         let backoff = backoff_file_move();
         let persisted = backoff::future::retry(backoff, move || {
-            let mut from = from.take(); // Needs to be moved inside the closure to be then passed to the async block
+            // Needed because we cannot move out of `from`, a captured variable in an `FnMut` closure, and then pass it to the async move block
+            let mut from = from.take();
 
             async move {
                 if let Some(file) = from.take() {
