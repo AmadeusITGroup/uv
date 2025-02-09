@@ -2653,6 +2653,42 @@ fn install_executable() {
     Command::new(executable).arg("--version").assert().success();
 }
 
+/// Install a package without a specific entrypoint
+#[test]
+fn install_executable_no_bin() {
+    let context = TestContext::new("3.12");
+
+    uv_snapshot!(context
+        .pip_install()
+        .arg("httpx")
+        .arg("--no-bin")
+        .arg("httpx"), @r###"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+
+    ----- stderr -----
+    Resolved 7 packages in [TIME]
+    Prepared 7 packages in [TIME]
+    Installed 7 packages in [TIME]
+     + anyio==4.3.0
+     + certifi==2024.2.2
+     + h11==0.14.0
+     + httpcore==1.0.4
+     + httpx==0.27.0
+     + idna==3.6
+     + sniffio==1.3.1
+    "###
+    );
+
+    // Verify that `pylint` is executable.
+    let executable = context
+        .venv
+        .join(if cfg!(windows) { "Scripts" } else { "bin" })
+        .join(format!("httpx{}", std::env::consts::EXE_SUFFIX));
+    assert!(!executable.exists());
+}
+
 /// Install a package into a virtual environment using copy semantics, and ensure that the
 /// executable permissions are retained.
 #[test]

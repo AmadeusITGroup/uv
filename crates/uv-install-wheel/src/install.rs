@@ -35,6 +35,7 @@ pub fn install_wheel(
     installer_metadata: bool,
     link_mode: LinkMode,
     locks: &Locks,
+    no_bin: Vec<String>,
 ) -> Result<(), Error> {
     let dist_info_prefix = find_dist_info(&wheel)?;
     let metadata = dist_info_metadata(&dist_info_prefix, &wheel)?;
@@ -80,13 +81,20 @@ pub fn install_wheel(
     )?;
     let mut record = read_record_file(&mut record_file)?;
 
-    let (console_scripts, gui_scripts) =
+    let (mut console_scripts, mut gui_scripts) =
         parse_scripts(&wheel, &dist_info_prefix, None, layout.python_version.1)?;
 
     if console_scripts.is_empty() && gui_scripts.is_empty() {
         trace!(?name, "No entrypoints");
     } else {
         trace!(?name, "Writing entrypoints");
+
+        // Remove script marked as to be ignored
+        if !no_bin.is_empty() {
+            let no_bin_set: std::collections::HashSet<_> = no_bin.iter().collect();
+            console_scripts.retain(|entrypoint| !no_bin_set.contains(&entrypoint.name));
+            gui_scripts.retain(|entrypoint| !no_bin_set.contains(&entrypoint.name));
+        }
 
         fs_err::create_dir_all(&layout.scheme.scripts)?;
         write_script_entrypoints(

@@ -504,6 +504,7 @@ async fn run(mut cli: Cli) -> Result<ExitStatus> {
                 args.dry_run,
                 printer,
                 globals.preview,
+                &args.no_bin,
             )
             .await
         }
@@ -596,6 +597,7 @@ async fn run(mut cli: Cli) -> Result<ExitStatus> {
                 args.dry_run,
                 printer,
                 globals.preview,
+                &args.no_bin,
             )
             .await
         }
@@ -1006,6 +1008,7 @@ async fn run(mut cli: Cli) -> Result<ExitStatus> {
                 cache,
                 printer,
                 globals.preview,
+                &args.no_bin,
             ))
             .await
         }
@@ -1071,6 +1074,7 @@ async fn run(mut cli: Cli) -> Result<ExitStatus> {
                 cache,
                 printer,
                 globals.preview,
+                &args.no_bin,
             ))
             .await
         }
@@ -1118,6 +1122,7 @@ async fn run(mut cli: Cli) -> Result<ExitStatus> {
                 &cache,
                 printer,
                 globals.preview,
+                &args.no_bin,
             ))
             .await
         }
@@ -1512,6 +1517,7 @@ async fn run_project(
                 args.env_file,
                 args.no_env_file,
                 globals.preview,
+                &args.no_bin,
             ))
             .await
         }
@@ -1554,6 +1560,7 @@ async fn run_project(
                 &cache,
                 printer,
                 globals.preview,
+                &args.no_bin,
             )
             .await
         }
@@ -1651,6 +1658,7 @@ async fn run_project(
                 &cache,
                 printer,
                 globals.preview,
+                &args.no_bin,
             ))
             .await
         }
@@ -1697,6 +1705,7 @@ async fn run_project(
                 &cache,
                 printer,
                 globals.preview,
+                &args.no_bin,
             ))
             .await
         }

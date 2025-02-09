@@ -72,6 +72,7 @@ pub(crate) async fn sync(
     cache: &Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<ExitStatus> {
     // Identify the project.
     let project = if frozen {
@@ -330,6 +331,7 @@ pub(crate) async fn sync(
         dry_run,
         printer,
         preview,
+        no_bin,
     )
     .await
     {
@@ -367,6 +369,7 @@ pub(super) async fn do_sync(
     dry_run: DryRun,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<(), ProjectError> {
     // Extract the project settings.
     let InstallerSettingsRef {
@@ -545,6 +548,7 @@ pub(super) async fn do_sync(
         installer_metadata,
         dry_run,
         printer,
+        no_bin,
     )
     .await?;
 

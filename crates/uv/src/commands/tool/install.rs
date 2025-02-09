@@ -60,6 +60,7 @@ pub(crate) async fn install(
     cache: Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<ExitStatus> {
     let client_builder = BaseClientBuilder::new()
         .connectivity(connectivity)
@@ -436,6 +437,7 @@ pub(crate) async fn install(
             &cache,
             printer,
             preview,
+            no_bin,
         )
         .await
         {
@@ -565,6 +567,7 @@ pub(crate) async fn install(
             &cache,
             printer,
             preview,
+            no_bin,
         )
         .await
         .inspect_err(|_| {

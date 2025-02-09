@@ -1493,6 +1493,10 @@ pub struct PipSyncArgs {
 
     #[command(flatten)]
     pub compat_args: compat::PipSyncCompatArgs,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 }
 
 #[derive(Args)]
@@ -1785,6 +1789,10 @@ pub struct PipInstallArgs {
 
     #[command(flatten)]
     pub compat_args: compat::PipInstallCompatArgs,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 }
 
 #[derive(Args)]
@@ -2452,6 +2460,10 @@ pub struct VenvArgs {
 
     #[command(flatten)]
     pub compat_args: compat::VenvCompatArgs,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 }
 
 #[derive(Parser, Debug, Clone)]
@@ -2932,6 +2944,10 @@ pub struct RunArgs {
     /// By default, environment modifications are omitted, but enabled under `--verbose`.
     #[arg(long, env = EnvVars::UV_SHOW_RESOLUTION, value_parser = clap::builder::BoolishValueParser::new(), hide = true)]
     pub show_resolution: bool,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 }
 
 #[derive(Args)]
@@ -3154,6 +3170,10 @@ pub struct SyncArgs {
         value_parser = parse_maybe_string,
     )]
     pub python: Option<Maybe<String>>,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 }
 
 #[derive(Args)]
@@ -3359,6 +3379,10 @@ pub struct AddArgs {
         value_parser = parse_maybe_string,
     )]
     pub python: Option<Maybe<String>>,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 }
 
 #[derive(Args)]
@@ -3444,6 +3468,10 @@ pub struct RemoveArgs {
         value_parser = parse_maybe_string,
     )]
     pub python: Option<Maybe<String>>,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 }
 
 #[derive(Args)]
@@ -3913,6 +3941,10 @@ pub struct ToolRunArgs {
     #[arg(long, value_delimiter = ',', value_parser = parse_maybe_file_path)]
     pub with_requirements: Vec<Maybe<PathBuf>>,
 
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
+
     /// Run the tool in an isolated virtual environment, ignoring any already-installed tools.
     #[arg(long)]
     pub isolated: bool,
@@ -3977,6 +4009,10 @@ pub struct ToolInstallArgs {
     /// Include the given packages in editable mode.
     #[arg(long)]
     pub with_editable: Vec<comma::CommaSeparatedRequirements>,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 
     /// Constrain versions using the given requirements files.
     ///
@@ -4307,6 +4343,10 @@ pub struct ToolUpgradeArgs {
 
     #[command(flatten)]
     pub build: BuildOptionsArgs,
+
+    /// TODO(jp): Test
+    #[arg(long)]
+    pub no_bin: Vec<String>,
 }
 
 #[derive(Args)]

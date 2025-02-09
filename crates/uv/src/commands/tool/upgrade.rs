@@ -49,6 +49,7 @@ pub(crate) async fn upgrade(
     cache: &Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<ExitStatus> {
     let installed_tools = InstalledTools::from_settings()?.init()?;
     let _lock = installed_tools.lock().await?;
@@ -131,6 +132,7 @@ pub(crate) async fn upgrade(
             native_tls,
             allow_insecure_host,
             preview,
+            no_bin,
         )
         .await;
 
@@ -224,6 +226,7 @@ async fn upgrade_tool(
     native_tls: bool,
     allow_insecure_host: &[TrustedHost],
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<UpgradeOutcome> {
     // Ensure the tool is installed.
     let existing_tool_receipt = match installed_tools.get_tool_receipt(name) {
@@ -327,6 +330,7 @@ async fn upgrade_tool(
             cache,
             printer,
             preview,
+            no_bin,
         )
         .await?;
 
@@ -354,6 +358,7 @@ async fn upgrade_tool(
             cache,
             printer,
             preview,
+            no_bin,
         )
         .await?;
 

@@ -420,6 +420,7 @@ pub(crate) async fn install(
     installer_metadata: bool,
     dry_run: DryRun,
     printer: Printer,
+    no_bin: &Vec<String>,
 ) -> Result<Changelog, Error> {
     let start = std::time::Instant::now();
 
@@ -545,6 +546,7 @@ pub(crate) async fn install(
             .with_reporter(Arc::new(
                 InstallReporter::from(printer).with_length(installs.len() as u64),
             ))
+            .with_no_bin(no_bin)
             // This technically can block the runtime, but we are on the main thread and
             // have no other running tasks at this point, so this lets us avoid spawning a blocking
             // task.

@@ -1803,6 +1803,113 @@ fn tool_install_unnamed_with() {
     "###);
 }
 
+/// Test installing a tool with excluded entrypoitns with "--no-bin"
+#[test]
+fn tool_install_no_bin() {
+    let context = TestContext::new("3.12")
+        .with_filtered_counts()
+        .with_filtered_exe_suffix();
+
+    let tool_dir = context.temp_dir.child("tools");
+    let bin_dir = context.temp_dir.child("bin");
+
+    uv_snapshot!(context.filters(), context.tool_install()
+        .arg("black")
+        .arg("--with")
+        .arg("httpx")
+        .arg("--no-bin")
+        .arg("httpx")
+        .env(EnvVars::UV_TOOL_DIR, tool_dir.as_os_str())
+        .env(EnvVars::XDG_BIN_HOME, bin_dir.as_os_str())
+        .env(EnvVars::PATH, bin_dir.as_os_str()), @r###"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+
+    ----- stderr -----
+    Resolved [N] packages in [TIME]
+    Prepared [N] packages in [TIME]
+    Installed [N] packages in [TIME]
+     + anyio==4.3.0
+     + black==24.3.0
+     + certifi==2024.2.2
+     + click==8.1.7
+     + h11==0.14.0
+     + httpcore==1.0.4
+     + httpx==0.27.0
+     + idna==3.6
+     + mypy-extensions==1.0.0
+     + packaging==24.0
+     + pathspec==0.12.1
+     + platformdirs==4.2.0
+     + sniffio==1.3.1
+    Installed 2 executables: black, blackd
+    "###);
+
+    tool_dir.child("black").assert(predicate::path::is_dir());
+    tool_dir
+        .child("black")
+        .child("uv-receipt.toml")
+        .assert(predicate::path::exists());
+
+    let black = bin_dir.child(format!("black{}", std::env::consts::EXE_SUFFIX));
+    assert!(black.exists());
+
+    let httpx = bin_dir.child(format!("httpx{}", std::env::consts::EXE_SUFFIX));
+    assert!(!httpx.exists());
+
+    // On Windows, we can't snapshot an executable file.
+    #[cfg(not(windows))]
+    insta::with_settings!({
+        filters => context.filters(),
+    }, {
+        // Should run black in the virtual environment
+        assert_snapshot!(fs_err::read_to_string(black).unwrap(), @r###"
+        #![TEMP_DIR]/tools/black/bin/python
+        # -*- coding: utf-8 -*-
+        import sys
+        from black import patched_main
+        if __name__ == "__main__":
+            if sys.argv[0].endswith("-script.pyw"):
+                sys.argv[0] = sys.argv[0][:-11]
+            elif sys.argv[0].endswith(".exe"):
+                sys.argv[0] = sys.argv[0][:-4]
+            sys.exit(patched_main())
+        "###);
+
+    });
+
+    insta::with_settings!({
+        filters => context.filters(),
+    }, {
+        // We should have a tool receipt
+        assert_snapshot!(fs_err::read_to_string(tool_dir.join("black").join("uv-receipt.toml")).unwrap(), @r###"
+        [tool]
+        requirements = [
+            { name = "black" },
+            { name = "httpx" },
+        ]
+        entrypoints = [
+            { name = "black", install-path = "[TEMP_DIR]/bin/black" },
+            { name = "blackd", install-path = "[TEMP_DIR]/bin/blackd" },
+        ]
+
+        [tool.options]
+        exclude-newer = "2024-03-25T00:00:00Z"
+        "###);
+    });
+
+    uv_snapshot!(context.filters(), Command::new("black").arg("--version").env(EnvVars::PATH, bin_dir.as_os_str()), @r###"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    black, 24.3.0 (compiled: yes)
+    Python (CPython) 3.12.[X]
+
+    ----- stderr -----
+    "###);
+}
+
 /// Test installing a tool with extra requirements from a `requirements.txt` file.
 #[test]
 fn tool_install_requirements_txt() {

@@ -64,6 +64,7 @@ pub(crate) async fn remove(
     cache: &Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<ExitStatus> {
     let target = if let Some(script) = script {
         // If we found a PEP 723 script and the user provided a project-only setting, warn.
@@ -352,6 +353,7 @@ pub(crate) async fn remove(
         DryRun::Disabled,
         printer,
         preview,
+        no_bin,
     )
     .await
     {

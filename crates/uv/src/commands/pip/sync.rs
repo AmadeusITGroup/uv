@@ -78,6 +78,7 @@ pub(crate) async fn pip_sync(
     dry_run: DryRun,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<ExitStatus> {
     let client_builder = BaseClientBuilder::new()
         .connectivity(connectivity)
@@ -410,6 +411,7 @@ pub(crate) async fn pip_sync(
         installer_metadata,
         dry_run,
         printer,
+        no_bin,
     )
     .await
     {

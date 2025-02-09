@@ -87,6 +87,7 @@ pub(crate) async fn add(
     cache: &Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<ExitStatus> {
     for source in &requirements {
         match source {
@@ -636,6 +637,7 @@ pub(crate) async fn add(
         cache,
         printer,
         preview,
+        no_bin,
     )
     .await
     {
@@ -674,6 +676,7 @@ async fn lock_and_sync(
     cache: &Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<(), ProjectError> {
     let mut lock = project::lock::do_safe_lock(
         if locked {
@@ -885,6 +888,7 @@ async fn lock_and_sync(
         DryRun::Disabled,
         printer,
         preview,
+        no_bin,
     )
     .await?;
 

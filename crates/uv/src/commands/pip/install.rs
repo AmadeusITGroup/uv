@@ -90,6 +90,7 @@ pub(crate) async fn pip_install(
     dry_run: DryRun,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> anyhow::Result<ExitStatus> {
     let start = std::time::Instant::now();
 
@@ -465,6 +466,7 @@ pub(crate) async fn pip_install(
         installer_metadata,
         dry_run,
         printer,
+        no_bin,
     )
     .await
     {

@@ -19,6 +19,7 @@ pub struct Installer<'a> {
     reporter: Option<Arc<dyn Reporter>>,
     installer_name: Option<String>,
     installer_metadata: bool,
+    no_bin: Vec<String>,
 }
 
 impl<'a> Installer<'a> {
@@ -31,6 +32,7 @@ impl<'a> Installer<'a> {
             reporter: None,
             installer_name: Some("uv".to_string()),
             installer_metadata: true,
+            no_bin: vec![],
         }
     }
 
@@ -76,6 +78,14 @@ impl<'a> Installer<'a> {
         }
     }
 
+    /// Set executables to not install in the virtual environment.
+    pub fn with_no_bin(self, no_bin: &Vec<String>) -> Self {
+        Self {
+            no_bin: no_bin.clone(),
+            ..self
+        }
+    }
+
     /// Install a set of wheels into a Python virtual environment.
     #[instrument(skip_all, fields(num_wheels = %wheels.len()))]
     pub async fn install(self, wheels: Vec<CachedDist>) -> Result<Vec<CachedDist>> {
@@ -86,6 +96,7 @@ impl<'a> Installer<'a> {
             reporter,
             installer_name,
             installer_metadata,
+            no_bin,
         } = self;
 
         if cache.is_some_and(Cache::is_temporary) {
@@ -102,6 +113,7 @@ impl<'a> Installer<'a> {
         let relocatable = venv.relocatable();
         // Initialize the threadpool with the user settings.
         LazyLock::force(&RAYON_INITIALIZE);
+
         rayon::spawn(move || {
             let result = install(
                 wheels,
@@ -111,6 +123,7 @@ impl<'a> Installer<'a> {
                 reporter,
                 relocatable,
                 installer_metadata,
+                no_bin,
             );
 
             // This may fail if the main task was cancelled.
@@ -141,6 +154,7 @@ impl<'a> Installer<'a> {
             self.reporter,
             self.venv.relocatable(),
             self.installer_metadata,
+            self.no_bin,
         )
     }
 }
@@ -155,6 +169,7 @@ fn install(
     reporter: Option<Arc<dyn Reporter>>,
     relocatable: bool,
     installer_metadata: bool,
+    no_bin: Vec<String>,
 ) -> Result<Vec<CachedDist>> {
     // Initialize the threadpool with the user settings.
     LazyLock::force(&RAYON_INITIALIZE);
@@ -178,6 +193,7 @@ fn install(
             installer_metadata,
             link_mode,
             &locks,
+            no_bin.clone(),
         )
         .with_context(|| format!("Failed to install: {} ({wheel})", wheel.filename()))?;
 

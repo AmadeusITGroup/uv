@@ -92,6 +92,7 @@ pub(crate) async fn run(
     env_file: Vec<PathBuf>,
     no_env_file: bool,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> anyhow::Result<ExitStatus> {
     // These cases seem quite complex because (in theory) they should change the "current package".
     // Let's ban them entirely for now.
@@ -271,6 +272,7 @@ pub(crate) async fn run(
                 cache,
                 printer,
                 preview,
+                no_bin,
             )
             .await;
 
@@ -417,6 +419,7 @@ pub(crate) async fn run(
                     cache,
                     printer,
                     preview,
+                    no_bin,
                 )
                 .await;
 
@@ -802,6 +805,7 @@ pub(crate) async fn run(
                     DryRun::Disabled,
                     printer,
                     preview,
+                    no_bin,
                 )
                 .await
                 {
@@ -937,6 +941,7 @@ pub(crate) async fn run(
                 cache,
                 printer,
                 preview,
+                no_bin,
             )
             .await;
 

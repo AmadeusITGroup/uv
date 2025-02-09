@@ -299,6 +299,7 @@ pub(crate) struct RunSettings {
     pub(crate) settings: ResolverInstallerSettings,
     pub(crate) env_file: Vec<PathBuf>,
     pub(crate) no_env_file: bool,
+    pub(crate) no_bin: Vec<String>,
 }
 
 impl RunSettings {
@@ -344,6 +345,7 @@ impl RunSettings {
             show_resolution,
             env_file,
             no_env_file,
+            no_bin,
         } = args;
 
         let install_mirrors = filesystem
@@ -403,6 +405,7 @@ impl RunSettings {
             env_file,
             no_env_file,
             install_mirrors,
+            no_bin,
         }
     }
 }
@@ -416,6 +419,7 @@ pub(crate) struct ToolRunSettings {
     pub(crate) with: Vec<String>,
     pub(crate) with_editable: Vec<String>,
     pub(crate) with_requirements: Vec<PathBuf>,
+    pub(crate) no_bin: Vec<String>,
     pub(crate) isolated: bool,
     pub(crate) show_resolution: bool,
     pub(crate) python: Option<String>,
@@ -438,6 +442,7 @@ impl ToolRunSettings {
             with,
             with_editable,
             with_requirements,
+            no_bin,
             isolated,
             show_resolution,
             installer,
@@ -485,6 +490,7 @@ impl ToolRunSettings {
                 .into_iter()
                 .filter_map(Maybe::into_option)
                 .collect(),
+            no_bin,
             isolated,
             show_resolution,
             python: python.and_then(Maybe::into_option),
@@ -507,6 +513,7 @@ pub(crate) struct ToolInstallSettings {
     pub(crate) with: Vec<String>,
     pub(crate) with_requirements: Vec<PathBuf>,
     pub(crate) with_editable: Vec<String>,
+    pub(crate) no_bin: Vec<String>,
     pub(crate) constraints: Vec<PathBuf>,
     pub(crate) overrides: Vec<PathBuf>,
     pub(crate) python: Option<String>,
@@ -529,6 +536,7 @@ impl ToolInstallSettings {
             with,
             with_editable,
             with_requirements,
+            no_bin,
             constraints,
             overrides,
             installer,
@@ -568,6 +576,7 @@ impl ToolInstallSettings {
                 .into_iter()
                 .filter_map(Maybe::into_option)
                 .collect(),
+            no_bin,
             constraints: constraints
                 .into_iter()
                 .filter_map(Maybe::into_option)
@@ -596,6 +605,7 @@ pub(crate) struct ToolUpgradeSettings {
     pub(crate) install_mirrors: PythonInstallMirrors,
     pub(crate) args: ResolverInstallerOptions,
     pub(crate) filesystem: ResolverInstallerOptions,
+    pub(crate) no_bin: Vec<String>,
 }
 impl ToolUpgradeSettings {
     /// Resolve the [`ToolUpgradeSettings`] from the CLI and filesystem configuration.
@@ -627,6 +637,7 @@ impl ToolUpgradeSettings {
             no_compile_bytecode,
             no_sources,
             build,
+            no_bin,
         } = args;
 
         if upgrade {
@@ -678,6 +689,7 @@ impl ToolUpgradeSettings {
             args,
             filesystem: top_level,
             install_mirrors,
+            no_bin,
         }
     }
 }
@@ -971,6 +983,7 @@ pub(crate) struct SyncSettings {
     pub(crate) install_mirrors: PythonInstallMirrors,
     pub(crate) refresh: Refresh,
     pub(crate) settings: ResolverInstallerSettings,
+    pub(crate) no_bin: Vec<String>,
 }
 
 impl SyncSettings {
@@ -1007,6 +1020,7 @@ impl SyncSettings {
             all_packages,
             package,
             python,
+            no_bin,
         } = args;
         let install_mirrors = filesystem
             .clone()
@@ -1055,6 +1069,7 @@ impl SyncSettings {
             refresh: Refresh::from(refresh),
             settings,
             install_mirrors,
+            no_bin,
         }
     }
 }
@@ -1130,6 +1145,7 @@ pub(crate) struct AddSettings {
     pub(crate) refresh: Refresh,
     pub(crate) indexes: Vec<Index>,
     pub(crate) settings: ResolverInstallerSettings,
+    pub(crate) no_bin: Vec<String>,
 }
 
 impl AddSettings {
@@ -1160,6 +1176,7 @@ impl AddSettings {
             package,
             script,
             python,
+            no_bin,
         } = args;
 
         let dependency_type = if let Some(extra) = optional {
@@ -1246,6 +1263,7 @@ impl AddSettings {
                 filesystem,
             ),
             install_mirrors,
+            no_bin,
         }
     }
 }
@@ -1266,6 +1284,7 @@ pub(crate) struct RemoveSettings {
     pub(crate) install_mirrors: PythonInstallMirrors,
     pub(crate) refresh: Refresh,
     pub(crate) settings: ResolverInstallerSettings,
+    pub(crate) no_bin: Vec<String>,
 }
 
 impl RemoveSettings {
@@ -1288,6 +1307,7 @@ impl RemoveSettings {
             package,
             script,
             python,
+            no_bin,
         } = args;
 
         let dependency_type = if let Some(extra) = optional {
@@ -1326,6 +1346,7 @@ impl RemoveSettings {
                 filesystem,
             ),
             install_mirrors,
+            no_bin,
         }
     }
 }
@@ -1683,6 +1704,7 @@ pub(crate) struct PipSyncSettings {
     pub(crate) dry_run: DryRun,
     pub(crate) refresh: Refresh,
     pub(crate) settings: PipSettings,
+    pub(crate) no_bin: Vec<String>,
 }
 
 impl PipSyncSettings {
@@ -1717,6 +1739,7 @@ impl PipSyncSettings {
             no_strict,
             dry_run,
             compat_args: _,
+            no_bin,
         } = *args;
 
         Self {
@@ -1754,6 +1777,7 @@ impl PipSyncSettings {
                 },
                 filesystem,
             ),
+            no_bin,
         }
     }
 }
@@ -1774,6 +1798,7 @@ pub(crate) struct PipInstallSettings {
     pub(crate) modifications: Modifications,
     pub(crate) refresh: Refresh,
     pub(crate) settings: PipSettings,
+    pub(crate) no_bin: Vec<String>,
 }
 
 impl PipInstallSettings {
@@ -1816,6 +1841,7 @@ impl PipInstallSettings {
             no_strict,
             dry_run,
             compat_args: _,
+            no_bin,
         } = args;
 
         let constraints_from_workspace = if let Some(configuration) = &filesystem {
@@ -1893,6 +1919,7 @@ impl PipInstallSettings {
                 },
                 filesystem,
             ),
+            no_bin,
         }
     }
 }
@@ -2240,6 +2267,7 @@ pub(crate) struct VenvSettings {
     pub(crate) no_project: bool,
     pub(crate) refresh: Refresh,
     pub(crate) settings: PipSettings,
+    pub(crate) no_bin: Vec<String>,
 }
 
 impl VenvSettings {
@@ -2263,6 +2291,7 @@ impl VenvSettings {
             link_mode,
             refresh,
             compat_args: _,
+            no_bin,
         } = args;
 
         Self {
@@ -2286,6 +2315,7 @@ impl VenvSettings {
                 },
                 filesystem,
             ),
+            no_bin,
         }
     }
 }

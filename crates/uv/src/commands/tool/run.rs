@@ -88,6 +88,7 @@ pub(crate) async fn run(
     cache: Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> anyhow::Result<ExitStatus> {
     let Some(command) = command else {
         // When a command isn't provided, we'll show a brief help including available tools
@@ -133,6 +134,7 @@ pub(crate) async fn run(
         &cache,
         printer,
         preview,
+        no_bin,
     )
     .await;
 
@@ -448,6 +450,7 @@ async fn get_or_create_environment(
     cache: &Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<(ToolRequirement, PythonEnvironment), ProjectError> {
     let client_builder = BaseClientBuilder::new()
         .connectivity(connectivity)
@@ -701,6 +704,7 @@ async fn get_or_create_environment(
         cache,
         printer,
         preview,
+        no_bin,
     )
     .await;
 
@@ -760,6 +764,7 @@ async fn get_or_create_environment(
                     cache,
                     printer,
                     preview,
+                    no_bin,
                 )
                 .await?
             }

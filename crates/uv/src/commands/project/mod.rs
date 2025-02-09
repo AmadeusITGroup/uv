@@ -1450,6 +1450,7 @@ pub(crate) async fn sync_environment(
     cache: &Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<PythonEnvironment, ProjectError> {
     let InstallerSettingsRef {
         index_locations,
@@ -1566,6 +1567,7 @@ pub(crate) async fn sync_environment(
         installer_metadata,
         dry_run,
         printer,
+        no_bin,
     )
     .await?;
 
@@ -1608,6 +1610,7 @@ pub(crate) async fn update_environment(
     cache: &Cache,
     printer: Printer,
     preview: PreviewMode,
+    no_bin: &Vec<String>,
 ) -> Result<EnvironmentUpdate, ProjectError> {
     warn_on_requirements_txt_setting(&spec, settings.as_ref().into());
 
@@ -1819,6 +1822,7 @@ pub(crate) async fn update_environment(
         installer_metadata,
         dry_run,
         printer,
+        no_bin,
     )
     .await?;
 

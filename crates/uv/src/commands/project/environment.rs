@@ -46,6 +46,7 @@ impl CachedEnvironment {
         cache: &Cache,
         printer: Printer,
         preview: PreviewMode,
+        no_bin: &Vec<String>,
     ) -> Result<Self, ProjectError> {
         let interpreter = Self::base_interpreter(interpreter, cache)?;
 
@@ -82,6 +83,7 @@ impl CachedEnvironment {
             cache,
             printer,
             preview,
+            no_bin,
         )
         .await
     }
@@ -104,6 +106,7 @@ impl CachedEnvironment {
         cache: &Cache,
         printer: Printer,
         preview: PreviewMode,
+        no_bin: &Vec<String>,
     ) -> Result<Self, ProjectError> {
         let interpreter = Self::base_interpreter(interpreter, cache)?;
 
@@ -135,6 +138,7 @@ impl CachedEnvironment {
             cache,
             printer,
             preview,
+            no_bin,
         )
         .await
     }
@@ -154,6 +158,7 @@ impl CachedEnvironment {
         cache: &Cache,
         printer: Printer,
         preview: PreviewMode,
+        no_bin: &Vec<String>,
     ) -> Result<Self, ProjectError> {
         // Hash the resolution by hashing the generated lockfile.
         // TODO(charlie): If the resolution contains any mutable metadata (like a path or URL
@@ -206,6 +211,7 @@ impl CachedEnvironment {
             cache,
             printer,
             preview,
+            no_bin,
         )
         .await?;
 
