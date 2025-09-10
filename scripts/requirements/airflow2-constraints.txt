@@ -203,7 +203,7 @@ msrestazure==0.6.4
 mypy-boto3-appflow==1.24.36.post1
 mypy-boto3-rds==1.24.54
 mypy-boto3-redshift-data==1.24.36.post1
-mysql-connector-python==8.0.30
+mysql-connector-python==9.1.0
 mysqlclient==2.1.1
 numpy==1.22.4
 oauthlib==3.2.0
