@@ -255,7 +255,7 @@ terminado==0.18.0
     #   jupyter-server-terminals
 tinycss2==1.2.1
     # via nbconvert
-tornado==6.4
+tornado==6.4.2
     # via
     #   ipykernel
     #   jupyter-client
