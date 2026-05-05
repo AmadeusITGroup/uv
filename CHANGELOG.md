@@ -3,6 +3,14 @@
 <!-- prettier-ignore-start -->
 
 
+## 0.11.10
+
+Released on 2026-05-05.
+
+### Bug fixes
+
+- Allow pre-release Python requests with non-zero patch versions ([#19286](https://github.com/astral-sh/uv/pull/19286))
+
 ## 0.11.9
 
 Released on 2026-05-04.
